@@ -25,4 +25,10 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.UNAUTHORIZED) // 401
                 .body(Map.of("error", "Invalid email or password"));
     }
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidToken(InvalidTokenException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED) // 401
+                .body(Map.of("error", ex.getMessage()));
+    }
 }

@@ -5,6 +5,8 @@ import com.sandesh.clinicapp.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -20,5 +22,9 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponse login(@RequestBody LoginRequest request) {
         return authService.login(request);
+    }
+    @PostMapping("/refresh")
+    public AuthResponse refresh(@RequestBody Map<String, String> body) {
+        return authService.refresh(body.get("refreshToken"));
     }
 }

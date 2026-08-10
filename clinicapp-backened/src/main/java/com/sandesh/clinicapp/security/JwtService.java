@@ -5,7 +5,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.function.Function;
@@ -52,5 +53,30 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload();
         return resolver.apply(claims);
+    }
+    @Value("${jwt.refresh-expiration}")
+    private long refreshExpiration;
+
+    public String generateRefreshToken(String email) {
+        return Jwts.builder()
+                .subject(email)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + refreshExpiration))
+                .signWith(getKey())
+                .compact();
+    }
+
+    public String hashToken(String token) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(token.getBytes());
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                hexString.append(String.format("%02x", b));
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
