@@ -31,4 +31,10 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.UNAUTHORIZED) // 401
                 .body(Map.of("error", ex.getMessage()));
     }
+    @ExceptionHandler(SlotConflictException.class)
+    public ResponseEntity<Map<String, String>> handleSlotConflict(SlotConflictException ex) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT) // 409
+                .body(Map.of("error", ex.getMessage()));
+    }
 }
