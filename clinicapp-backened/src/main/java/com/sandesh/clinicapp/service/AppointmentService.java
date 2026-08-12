@@ -37,7 +37,7 @@ public class AppointmentService {
         slot.setStatus(SlotStatus.BOOKED);
 
         try {
-            slotRepository.saveAndFlush(slot); // forces the UPDATE now, inside this transaction
+            slotRepository.saveAndFlush(slot);
         } catch (ObjectOptimisticLockingFailureException e) {
             throw new SlotConflictException("Slot was just booked by someone else");
         }
