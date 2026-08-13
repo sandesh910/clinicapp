@@ -9,6 +9,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/appointments")
@@ -29,6 +31,11 @@ public class AppointmentController {
     public ResponseEntity<Void> cancel(Authentication authentication, @PathVariable Long id) {
         String patientEmail = authentication.getName();
         appointmentService.cancelAppointment(patientEmail, id);
-        return ResponseEntity.noContent().build(); // 204
+        return ResponseEntity.noContent().build();
+    }
+    @GetMapping
+    @PreAuthorize("hasRole('PATIENT')")
+    public List<AppointmentResponse> getMyAppointments(Authentication authentication) {
+        return appointmentService.getPatientAppointments(authentication.getName());
     }
 }

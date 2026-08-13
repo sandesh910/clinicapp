@@ -1,7 +1,9 @@
 package com.sandesh.clinicapp.controller;
 
+import com.sandesh.clinicapp.dto.AppointmentResponse;
 import com.sandesh.clinicapp.dto.GenerateSlotsRequest;
 import com.sandesh.clinicapp.dto.SlotResponse;
+import com.sandesh.clinicapp.service.AppointmentService;
 import com.sandesh.clinicapp.service.SlotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +17,7 @@ import java.util.List;
 public class DoctorController {
 
     private final SlotService slotService;
+    private final AppointmentService appointmentService;
 
     @PostMapping("/{id}/slots")
     @PreAuthorize("hasRole('DOCTOR')")
@@ -25,5 +28,11 @@ public class DoctorController {
     @GetMapping("/{id}/slots")
     public List<SlotResponse> getSlots(@PathVariable Long id) {
         return slotService.getAvailableSlots(id);
+    }
+
+    @GetMapping("/{id}/appointments")
+    @PreAuthorize("hasRole('DOCTOR')")
+    public List<AppointmentResponse> getDoctorAppointments(@PathVariable Long id) {
+        return appointmentService.getDoctorAppointments(id);
     }
 }

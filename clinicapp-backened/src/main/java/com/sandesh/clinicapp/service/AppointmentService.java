@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -73,5 +74,17 @@ public class AppointmentService {
         Slot slot = appointment.getSlot();
         slot.setStatus(SlotStatus.AVAILABLE);
         slotRepository.save(slot);
+    }
+    public List<AppointmentResponse> getPatientAppointments(String patientEmail) {
+        User patient = userRepository.findByEmail(patientEmail)
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
+
+        return appointmentRepository.findByPatientId(patient.getId())
+                .stream().map(AppointmentResponse::from).toList();
+    }
+
+    public List<AppointmentResponse> getDoctorAppointments(Long doctorId) {
+        return appointmentRepository.findBySlotDoctorId(doctorId)
+                .stream().map(AppointmentResponse::from).toList();
     }
 }
