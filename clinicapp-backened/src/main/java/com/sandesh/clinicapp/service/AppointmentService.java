@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.time.LocalDateTime;
 
@@ -42,6 +43,7 @@ public class AppointmentService {
             throw new SlotConflictException("Slot was just booked by someone else");
         }
 
+
         Appointment appointment = new Appointment();
         appointment.setSlot(slot);
         appointment.setPatient(patient);
@@ -51,5 +53,25 @@ public class AppointmentService {
         appointmentRepository.save(appointment);
 
         return AppointmentResponse.from(appointment);
+    }
+    @Transactional
+    public void cancelAppointment(String patientEmail, Long appointmentId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+
+        if (!appointment.getPatient().getEmail().equals(patientEmail)) {
+            throw new AccessDeniedException("You can only cancel your own appointments");
+        }
+
+        if (appointment.getStatus() == AppointmentStatus.CANCELLED) {
+            throw new SlotConflictException("Appointment is already cancelled");
+        }
+
+        appointment.setStatus(AppointmentStatus.CANCELLED);
+        appointmentRepository.save(appointment);
+
+        Slot slot = appointment.getSlot();
+        slot.setStatus(SlotStatus.AVAILABLE);
+        slotRepository.save(slot);
     }
 }

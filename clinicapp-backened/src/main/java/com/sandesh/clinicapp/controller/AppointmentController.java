@@ -4,9 +4,11 @@ import com.sandesh.clinicapp.dto.AppointmentResponse;
 import com.sandesh.clinicapp.dto.BookingRequest;
 import com.sandesh.clinicapp.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/api/appointments")
@@ -20,5 +22,13 @@ public class AppointmentController {
     public AppointmentResponse book(Authentication authentication, @RequestBody BookingRequest request) {
         String patientEmail = authentication.getName();
         return appointmentService.bookAppointment(patientEmail, request);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('PATIENT')")
+    public ResponseEntity<Void> cancel(Authentication authentication, @PathVariable Long id) {
+        String patientEmail = authentication.getName();
+        appointmentService.cancelAppointment(patientEmail, id);
+        return ResponseEntity.noContent().build(); // 204
     }
 }
