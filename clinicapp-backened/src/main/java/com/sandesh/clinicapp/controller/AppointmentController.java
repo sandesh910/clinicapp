@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
+import com.sandesh.clinicapp.dto.PrescriptionRequest;
+import com.sandesh.clinicapp.dto.PrescriptionResponse;
+import com.sandesh.clinicapp.service.PrescriptionService;
 import java.util.List;
 
 
@@ -17,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AppointmentController {
 
+    private final PrescriptionService prescriptionService;
     private final AppointmentService appointmentService;
 
     @PostMapping
@@ -37,5 +40,21 @@ public class AppointmentController {
     @PreAuthorize("hasRole('PATIENT')")
     public List<AppointmentResponse> getMyAppointments(Authentication authentication) {
         return appointmentService.getPatientAppointments(authentication.getName());
+    }
+    @PostMapping("/{id}/prescription")
+    @PreAuthorize("hasRole('DOCTOR')")
+    public PrescriptionResponse createPrescription(Authentication authentication, @PathVariable Long id,
+                                                   @RequestBody PrescriptionRequest request) {
+        return prescriptionService.createPrescription(authentication.getName(), id, request);
+    }
+
+    @GetMapping("/{id}/prescription/pdf")
+    public ResponseEntity<byte[]> downloadPrescriptionPdf(Authentication authentication, @PathVariable Long id) {
+        byte[] pdfBytes = prescriptionService.generatePdf(authentication.getName(), id);
+
+        return ResponseEntity.ok()
+                .header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=prescription-" + id + ".pdf")
+                .body(pdfBytes);
     }
 }
