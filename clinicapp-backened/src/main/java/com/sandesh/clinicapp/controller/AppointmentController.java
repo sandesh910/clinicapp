@@ -3,6 +3,7 @@ package com.sandesh.clinicapp.controller;
 import com.sandesh.clinicapp.dto.AppointmentResponse;
 import com.sandesh.clinicapp.dto.BookingRequest;
 import com.sandesh.clinicapp.service.AppointmentService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/appointments")
+@SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class AppointmentController {
 

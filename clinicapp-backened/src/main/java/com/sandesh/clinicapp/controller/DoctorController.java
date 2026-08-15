@@ -5,6 +5,7 @@ import com.sandesh.clinicapp.dto.GenerateSlotsRequest;
 import com.sandesh.clinicapp.dto.SlotResponse;
 import com.sandesh.clinicapp.service.AppointmentService;
 import com.sandesh.clinicapp.service.SlotService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/doctors")
+@SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class DoctorController {
 
