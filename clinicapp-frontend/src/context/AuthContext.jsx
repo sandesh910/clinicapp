@@ -9,7 +9,7 @@ export function AuthProvider({ children }) {
     if (!token) return null;
     try {
       const decoded = jwtDecode(token);
-      return { email: decoded.sub };
+      return { email: decoded.sub, role: decoded.role };
     } catch {
       return null;
     }
@@ -19,7 +19,7 @@ export function AuthProvider({ children }) {
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
     const decoded = jwtDecode(accessToken);
-    setUser({ email: decoded.sub });
+    setUser({ email: decoded.sub, role: decoded.role });
   };
 
   const logout = () => {
