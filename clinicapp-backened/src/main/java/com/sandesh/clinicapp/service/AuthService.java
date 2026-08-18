@@ -49,6 +49,10 @@ public class AuthService {
     }
 
     public AuthResponse refresh(String refreshToken) {
+
+        if (refreshToken == null || refreshToken.isBlank()) {
+            throw new InvalidTokenException("Refresh token is required");
+        }
         String email = jwtService.extractEmail(refreshToken);
         String hashedIncoming = jwtService.hashToken(refreshToken);
 
@@ -69,7 +73,7 @@ public class AuthService {
     }
 
     private AuthResponse issueTokens(User user) {
-        String accessToken = jwtService.generateToken(user.getEmail(), user.getRole().name());
+        String accessToken = jwtService.generateToken(user.getEmail(), user.getRole().name(), user.getId());
         String refreshTokenRaw = jwtService.generateRefreshToken(user.getEmail());
 
         RefreshToken tokenEntity = new RefreshToken();
