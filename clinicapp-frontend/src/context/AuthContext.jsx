@@ -5,22 +5,22 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    const token = localStorage.getItem('accessToken');
-    if (!token) return null;
-    try {
-      const decoded = jwtDecode(token);
-      return { email: decoded.sub, role: decoded.role };
-    } catch {
-      return null;
-    }
-  });
+  const token = localStorage.getItem('accessToken');
+  if (!token) return null;
+  try {
+    const decoded = jwtDecode(token);
+    return { email: decoded.sub, role: decoded.role, userId: decoded.userId };
+  } catch {
+    return null;
+  }
+});
 
-  const login = (accessToken, refreshToken) => {
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
-    const decoded = jwtDecode(accessToken);
-    setUser({ email: decoded.sub, role: decoded.role });
-  };
+const login = (accessToken, refreshToken) => {
+  localStorage.setItem('accessToken', accessToken);
+  localStorage.setItem('refreshToken', refreshToken);
+  const decoded = jwtDecode(accessToken);
+  setUser({ email: decoded.sub, role: decoded.role, userId: decoded.userId });
+};
 
   const logout = () => {
     localStorage.removeItem('accessToken');

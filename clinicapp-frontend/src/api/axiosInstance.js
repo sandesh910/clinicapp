@@ -19,9 +19,13 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+    const isAuthEndpoint = originalRequest.url.includes('/auth/login') ||
+                            originalRequest.url.includes('/auth/register') ||
+                            originalRequest.url.includes('/auth/refresh');
 
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
+      originalRequest._retry = true;
+      
       try {
         const refreshToken = localStorage.getItem('refreshToken');
         const res = await axios.post('http://localhost:8080/api/auth/refresh', {
