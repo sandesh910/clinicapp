@@ -23,23 +23,19 @@ export default function Register() {
   };
 
   return (
-    <div>
+    <div className="auth-container">
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
         <input name="name" placeholder="Name" value={form.name} onChange={handleChange} required />
-        <br />
         <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-        <br />
         <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
-        <br />
         <select name="role" value={form.role} onChange={handleChange}>
           <option value="PATIENT">Patient</option>
           <option value="DOCTOR">Doctor</option>
         </select>
-        <br />
         <button type="submit">Register</button>
       </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="message">{error}</p>}
       <p>Already have an account? <Link to="/login">Login</Link></p>
     </div>
   );

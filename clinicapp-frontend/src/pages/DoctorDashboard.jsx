@@ -89,7 +89,7 @@ export default function DoctorDashboard() {
         />
         <button type="submit">Generate</button>
       </form>
-      {message && <p>{message}</p>}
+      {message && <p className="message">{message}</p>}
 
       <hr />
 
@@ -105,7 +105,7 @@ export default function DoctorDashboard() {
       <hr />
 
       <h3>My Appointments</h3>
-      {prescriptionMessage && <p>{prescriptionMessage}</p>}
+      {prescriptionMessage && (<p className="message">{prescriptionMessage}</p>)}
       <ul>
         {appointments.map((appt) => (
           <li key={appt.id} style={{ marginBottom: '15px' }}>

@@ -26,17 +26,15 @@ export default function Login() {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-        <br />
-        <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
-        <br />
-        <button type="submit">Login</button>
-      </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <p>No account? <Link to="/register">Register</Link></p>
-    </div>
-  );
+  <div className="auth-container">
+    <h2>Login</h2>
+    <form onSubmit={handleSubmit}>
+      <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
+      <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
+      <button type="submit">Login</button>
+    </form>
+    {error && <p className="message">{error}</p>}
+    <p>No account? <Link to="/register">Register</Link></p>
+  </div>
+);
 }

@@ -77,7 +77,7 @@ export default function PatientDashboard() {
       <h2>Patient Dashboard</h2>
       <p>Logged in as: {user.email}</p>
       <button onClick={logout}>Logout</button>
-      {message && <p>{message}</p>}
+      {message && <p className="message">{message}</p>}
 
       <hr />
 
