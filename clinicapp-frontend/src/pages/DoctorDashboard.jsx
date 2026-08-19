@@ -8,6 +8,8 @@ export default function DoctorDashboard() {
   const [appointments, setAppointments] = useState([]);
   const [form, setForm] = useState({ date: '', startTime: '', endTime: '', slotDurationMinutes: 30 });
   const [message, setMessage] = useState('');
+  const [prescriptionForm, setPrescriptionForm] = useState({});
+  const [prescriptionMessage, setPrescriptionMessage] = useState('');
 
   const loadSlots = async () => {
     const res = await api.get(`/doctors/${user.userId}/slots`);
@@ -40,6 +42,27 @@ export default function DoctorDashboard() {
       loadSlots();
     } catch (err) {
       setMessage(err.response?.data?.error || 'Failed to generate slots');
+    }
+  };
+
+  const handlePrescriptionChange = (appointmentId, field, value) => {
+    setPrescriptionForm({
+      ...prescriptionForm,
+      [appointmentId]: { ...prescriptionForm[appointmentId], [field]: value },
+    });
+  };
+
+  const handleWritePrescription = async (appointmentId) => {
+    setPrescriptionMessage('');
+    const data = prescriptionForm[appointmentId] || {};
+    try {
+      await api.post(`/appointments/${appointmentId}/prescription`, {
+        medicines: data.medicines || '',
+        notes: data.notes || '',
+      });
+      setPrescriptionMessage('Prescription saved');
+    } catch (err) {
+      setPrescriptionMessage(err.response?.data?.error || 'Failed to save prescription');
     }
   };
 
@@ -82,10 +105,28 @@ export default function DoctorDashboard() {
       <hr />
 
       <h3>My Appointments</h3>
+      {prescriptionMessage && <p>{prescriptionMessage}</p>}
       <ul>
         {appointments.map((appt) => (
-          <li key={appt.id}>
+          <li key={appt.id} style={{ marginBottom: '15px' }}>
             {appt.startTime} — Patient: {appt.patientName} ({appt.status})
+            {appt.status === 'CONFIRMED' && (
+              <div>
+                <textarea
+                  placeholder="Medicines"
+                  value={prescriptionForm[appt.id]?.medicines || ''}
+                  onChange={(e) => handlePrescriptionChange(appt.id, 'medicines', e.target.value)}
+                />
+                <br />
+                <textarea
+                  placeholder="Notes"
+                  value={prescriptionForm[appt.id]?.notes || ''}
+                  onChange={(e) => handlePrescriptionChange(appt.id, 'notes', e.target.value)}
+                />
+                <br />
+                <button onClick={() => handleWritePrescription(appt.id)}>Save Prescription</button>
+              </div>
+            )}
           </li>
         ))}
       </ul>
