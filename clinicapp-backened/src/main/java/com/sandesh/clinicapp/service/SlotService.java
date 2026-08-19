@@ -47,7 +47,7 @@ public class SlotService {
     }
 
     public List<SlotResponse> getAvailableSlots(Long doctorId) {
-        return slotRepository.findByDoctorIdAndStatus(doctorId, SlotStatus.AVAILABLE)
+        return slotRepository.findByDoctorIdAndStatusAndStartTimeAfter(doctorId, SlotStatus.AVAILABLE, LocalDateTime.now())
                 .stream().map(SlotResponse::from).toList();
     }
     public List<DoctorResponse> getAllDoctors() {
