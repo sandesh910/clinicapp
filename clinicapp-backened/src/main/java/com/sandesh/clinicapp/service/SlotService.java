@@ -1,5 +1,6 @@
 package com.sandesh.clinicapp.service;
 
+import com.sandesh.clinicapp.dto.DoctorResponse;
 import com.sandesh.clinicapp.dto.GenerateSlotsRequest;
 import com.sandesh.clinicapp.dto.SlotResponse;
 import com.sandesh.clinicapp.model.*;
@@ -48,5 +49,9 @@ public class SlotService {
     public List<SlotResponse> getAvailableSlots(Long doctorId) {
         return slotRepository.findByDoctorIdAndStatus(doctorId, SlotStatus.AVAILABLE)
                 .stream().map(SlotResponse::from).toList();
+    }
+    public List<DoctorResponse> getAllDoctors() {
+        return userRepository.findByRole(Role.DOCTOR)
+                .stream().map(DoctorResponse::from).toList();
     }
 }

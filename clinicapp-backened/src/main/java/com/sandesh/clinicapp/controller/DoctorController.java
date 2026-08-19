@@ -1,6 +1,7 @@
 package com.sandesh.clinicapp.controller;
 
 import com.sandesh.clinicapp.dto.AppointmentResponse;
+import com.sandesh.clinicapp.dto.DoctorResponse;
 import com.sandesh.clinicapp.dto.GenerateSlotsRequest;
 import com.sandesh.clinicapp.dto.SlotResponse;
 import com.sandesh.clinicapp.service.AppointmentService;
@@ -36,5 +37,9 @@ public class DoctorController {
     @PreAuthorize("hasRole('DOCTOR')")
     public List<AppointmentResponse> getDoctorAppointments(@PathVariable Long id) {
         return appointmentService.getDoctorAppointments(id);
+    }
+    @GetMapping
+    public List<DoctorResponse> getAllDoctors() {
+        return slotService.getAllDoctors();
     }
 }
